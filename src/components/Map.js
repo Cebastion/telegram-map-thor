@@ -52,7 +52,7 @@ const initMap = (mapInitialized, mapRef, userLocation, audioRef, visitedPoints) 
 
     const map = new ymaps.Map(mapRef.current, {
       center: [userLocation.latitude, userLocation.longitude],
-      zoom: 9,
+      zoom: 50,
     });
 
     mapInitialized.current = true;
