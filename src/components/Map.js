@@ -90,7 +90,7 @@ const initMap = (mapInitialized, mapRef, userLocation, audioRef) => {
           point.latitude,
           point.longitude
         );
-        return distance <= 50;
+        return distance <= 830771.2715558915;
       });
     
       if (isCloseToAnyPoint) {
