@@ -1,14 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-
-const points = [
-  { latitude: 48.495767, longitude: 34.640591 },
-  { latitude: 48.502781, longitude: 34.630121 },
-  { latitude: 48.520116, longitude: 34.615680 },
-  { latitude: 48.519363, longitude: 34.615679 },
-  { latitude: 48.515801, longitude: 34.613854 },
-  // { latitude: 55.758611, longitude: 37.62047 },
-  // { latitude: 55.751574, longitude: 37.573856 }
-];
+import { getData } from '../API/api.service';
 
 // Функция для получения координат пользователя
 const GetUserLocation = (setUserLocation) => {
@@ -40,11 +31,13 @@ const getDistanceFromLatLonInMeters = (lat1, lon1, lat2, lon2) => {
   const a =
     0.5 - Math.cos(dLat) / 2 + Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * (1 - Math.cos(dLon)) / 2;
 
+    console.log(R * 2 * Math.asin(Math.sqrt(a)))
+
   return R * 2 * Math.asin(Math.sqrt(a));
 };
 
 // Функция для инициализации карты
-const initMap = (mapInitialized, mapRef, userLocation, audioRef, visitedPoints) => {
+const initMap = (mapInitialized, mapRef, userLocation, audioRef, visitedPoints, points) => {
   const ymaps = window.ymaps;
 
   ymaps.ready(() => {
@@ -52,7 +45,7 @@ const initMap = (mapInitialized, mapRef, userLocation, audioRef, visitedPoints) 
 
     const map = new ymaps.Map(mapRef.current, {
       center: [userLocation.latitude, userLocation.longitude],
-      zoom: 50,
+      zoom: 10,
     });
 
     mapInitialized.current = true;
@@ -96,9 +89,10 @@ const initMap = (mapInitialized, mapRef, userLocation, audioRef, visitedPoints) 
           point.longitude
         );
 
-        if (distance <= 50 && !visitedPoints.current[index]) {
-          audioRef.current.play().catch(error => console.error('Audio playback failed:', error));
+        if (distance <= 8089572.104910173 && !visitedPoints.current[index]) {
           visitedPoints.current[index] = true;
+          audioRef.current.src = point.url;
+          audioRef.current.play().catch(error => console.error('Audio playback failed:', error));
           alert(`Вы посетили точку ${index + 1}`);
         }
       });
@@ -123,17 +117,17 @@ const initMap = (mapInitialized, mapRef, userLocation, audioRef, visitedPoints) 
 
 const Map = () => {
   const [userLocation, setUserLocation] = useState(null);
+  const [points, setPoints] = useState([]);
   const mapRef = useRef(null);
   const mapInitialized = useRef(false);
   const TestAudio = useRef(false);
   const audioRef = useRef(null);
-  const visitedPoints = useRef(Array(points.length).fill(false)); // Отслеживание посещенных точек
+  const visitedPoints = useRef([]); // Отслеживание посещенных точек
 
   useEffect(() => {
     const handleInteraction = () => {
       if (TestAudio.current) return;
       TestAudio.current = true;
-      audioRef.current.play().catch(error => console.error('Audio playback failed:', error));
       alert('Тестовое уведомление');
       document.removeEventListener('click', handleInteraction);
       document.removeEventListener('touchstart', handleInteraction);
@@ -142,16 +136,25 @@ const Map = () => {
     document.addEventListener('click', handleInteraction);
     document.addEventListener('touchstart', handleInteraction);
 
+    // Получение данных при монтировании компонента
+    getData().then((data) => {
+      setPoints(data);
+      visitedPoints.current = Array(data.length).fill(false); // Инициализация массива посещенных точек
+    });
+
     GetUserLocation(setUserLocation);
-    if (userLocation && !mapInitialized.current) {
-      initMap(mapInitialized, mapRef, userLocation, audioRef, visitedPoints);
+  }, []);
+
+  useEffect(() => {
+    if (userLocation && points.length > 0 && !mapInitialized.current) {
+      initMap(mapInitialized, mapRef, userLocation, audioRef, visitedPoints, points);
     }
-  }, [userLocation]);
+  }, [userLocation, points]);
 
   return (
     <>
       <div ref={mapRef} style={{ width: '100%', height: '100vh' }} />
-      <audio ref={audioRef} src="/music/puk.mp3" preload="auto" />
+      <audio ref={audioRef} preload="auto" />
     </>
   );
 };
