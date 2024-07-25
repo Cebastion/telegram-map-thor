@@ -99,6 +99,7 @@ const initMap = (mapInitialized, mapRef, userLocation, audioRef, visitedPoints) 
         if (distance <= 50 && !visitedPoints.current[index]) {
           audioRef.current.play().catch(error => console.error('Audio playback failed:', error));
           visitedPoints.current[index] = true;
+          alert(`Вы посетили точку ${index + 1}`);
         }
       });
     };
@@ -130,6 +131,7 @@ const Map = () => {
   useEffect(() => {
     const handleInteraction = () => {
       audioRef.current.play().catch(error => console.error('Audio playback failed:', error));
+      alert('Тестовое уведомление');
       document.removeEventListener('click', handleInteraction);
       document.removeEventListener('touchstart', handleInteraction);
     };
