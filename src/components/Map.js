@@ -125,11 +125,14 @@ const Map = () => {
   const [userLocation, setUserLocation] = useState(null);
   const mapRef = useRef(null);
   const mapInitialized = useRef(false);
+  const TestAudio = useRef(false);
   const audioRef = useRef(null);
   const visitedPoints = useRef(Array(points.length).fill(false)); // Отслеживание посещенных точек
 
   useEffect(() => {
     const handleInteraction = () => {
+      if (TestAudio.current) return;
+      TestAudio.current = true;
       audioRef.current.play().catch(error => console.error('Audio playback failed:', error));
       alert('Тестовое уведомление');
       document.removeEventListener('click', handleInteraction);
