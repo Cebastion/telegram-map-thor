@@ -1,9 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 const points = [
-  { latitude: 55.758611, longitude: 37.62047 },
-  { latitude: 55.751574, longitude: 37.573856 }
-]
+  { latitude: 48.495767, longitude: 34.640591 },
+  { latitude: 48.502781, longitude: 34.630121 },
+  { latitude: 48.520116, longitude: 34.615680 },
+  { latitude: 48.519363, longitude: 34.615679 },
+  { latitude: 48.515801, longitude: 34.613854 },
+  // { latitude: 55.758611, longitude: 37.62047 },
+  // { latitude: 55.751574, longitude: 37.573856 }
+];
+
 // Функция для получения координат пользователя
 const GetUserLocation = (setUserLocation) => {
   if (navigator.geolocation) {
@@ -30,11 +36,10 @@ const GetUserLocation = (setUserLocation) => {
 const getDistanceFromLatLonInMeters = (lat1, lon1, lat2, lon2) => {
   const R = 6371000; // Радиус Земли в метрах
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
-  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const dLon = ((lon1 - lon2) * Math.PI) / 180;
   const a =
     0.5 - Math.cos(dLat) / 2 + Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * (1 - Math.cos(dLon)) / 2;
 
-    console.log(R * 2 * Math.asin(Math.sqrt(a)))
   return R * 2 * Math.asin(Math.sqrt(a));
 };
 
@@ -90,7 +95,7 @@ const initMap = (mapInitialized, mapRef, userLocation, audioRef) => {
           point.latitude,
           point.longitude
         );
-        return distance <= 830771.2715558915;
+        return distance <= 50;
       });
     
       if (isCloseToAnyPoint) {
@@ -122,6 +127,15 @@ const Map = () => {
   const audioRef = useRef(null);
 
   useEffect(() => {
+    const handleInteraction = () => {
+      audioRef.current.play().catch(error => console.error('Audio playback failed:', error));
+      document.removeEventListener('click', handleInteraction);
+      document.removeEventListener('touchstart', handleInteraction);
+    };
+
+    document.addEventListener('click', handleInteraction);
+    document.addEventListener('touchstart', handleInteraction);
+
     GetUserLocation(setUserLocation);
     if (userLocation && !mapInitialized.current) {
       initMap(mapInitialized, mapRef, userLocation, audioRef);
@@ -130,10 +144,10 @@ const Map = () => {
 
   return (
     <>
-    <div ref={mapRef} style={{ width: '100%', height: '100vh' }} />
-    <audio ref={audioRef} src="/music/puk.mp3" preload="auto" />
+      <div ref={mapRef} style={{ width: '100%', height: '100vh' }} />
+      <audio ref={audioRef} src="/music/puk.mp3" preload="auto" />
     </>
-);
+  );
 };
 
 export default Map;
