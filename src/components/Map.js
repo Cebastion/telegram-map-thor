@@ -44,7 +44,7 @@ const getDistanceFromLatLonInMeters = (lat1, lon1, lat2, lon2) => {
 };
 
 // Функция для инициализации карты
-const initMap = (mapInitialized, mapRef, userLocation, audioRef) => {
+const initMap = (mapInitialized, mapRef, userLocation, audioRef, visitedPoints) => {
   const ymaps = window.ymaps;
 
   ymaps.ready(() => {
@@ -88,21 +88,19 @@ const initMap = (mapInitialized, mapRef, userLocation, audioRef) => {
       map.setCenter([newLocation.latitude, newLocation.longitude]);
     
       // Перебор всех точек и проверка расстояния до каждой из них
-      const isCloseToAnyPoint = points.some(point => {
+      points.forEach((point, index) => {
         const distance = getDistanceFromLatLonInMeters(
           newLocation.latitude,
           newLocation.longitude,
           point.latitude,
           point.longitude
         );
-        return distance <= 50;
+
+        if (distance <= 50 && !visitedPoints.current[index]) {
+          audioRef.current.play().catch(error => console.error('Audio playback failed:', error));
+          visitedPoints.current[index] = true;
+        }
       });
-    
-      if (isCloseToAnyPoint) {
-        console.log("Мы на точке")
-        alert("Мы на точке");
-        audioRef.current.play().catch(error => console.error('Audio playback failed:', error));
-      }
     };
 
     navigator.geolocation.watchPosition(
@@ -127,16 +125,11 @@ const Map = () => {
   const mapRef = useRef(null);
   const mapInitialized = useRef(false);
   const audioRef = useRef(null);
-  const userInteracted = useRef(false);
+  const visitedPoints = useRef(Array(points.length).fill(false)); // Отслеживание посещенных точек
 
   useEffect(() => {
     const handleInteraction = () => {
-      if (!userInteracted.current) {
-        audioRef.current.play().catch(error => console.error('Audio playback failed:', error));
-        console.log('Выстпед в воздух');
-        alert("Выстпед в воздух");
-        userInteracted.current = true;
-      }
+      audioRef.current.play().catch(error => console.error('Audio playback failed:', error));
       document.removeEventListener('click', handleInteraction);
       document.removeEventListener('touchstart', handleInteraction);
     };
@@ -146,7 +139,7 @@ const Map = () => {
 
     GetUserLocation(setUserLocation);
     if (userLocation && !mapInitialized.current) {
-      initMap(mapInitialized, mapRef, userLocation, audioRef);
+      initMap(mapInitialized, mapRef, userLocation, audioRef, visitedPoints);
     }
   }, [userLocation]);
 
