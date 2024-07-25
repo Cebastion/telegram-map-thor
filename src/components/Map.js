@@ -99,6 +99,8 @@ const initMap = (mapInitialized, mapRef, userLocation, audioRef) => {
       });
     
       if (isCloseToAnyPoint) {
+        console.log("Мы на точке")
+        alert("Мы на точке");
         audioRef.current.play().catch(error => console.error('Audio playback failed:', error));
       }
     };
@@ -125,10 +127,16 @@ const Map = () => {
   const mapRef = useRef(null);
   const mapInitialized = useRef(false);
   const audioRef = useRef(null);
+  const userInteracted = useRef(false);
 
   useEffect(() => {
     const handleInteraction = () => {
-      audioRef.current.play().catch(error => console.error('Audio playback failed:', error));
+      if (!userInteracted.current) {
+        audioRef.current.play().catch(error => console.error('Audio playback failed:', error));
+        console.log('Выстпед в воздух');
+        alert("Выстпед в воздух");
+        userInteracted.current = true;
+      }
       document.removeEventListener('click', handleInteraction);
       document.removeEventListener('touchstart', handleInteraction);
     };
