@@ -5,7 +5,7 @@ import Map from './components/Map'
 function App() {
   return (
     <Routes>
-      <Route path="/:NameThor?" element={<Map />} />
+      <Route path="/tour/:NameThor?" element={<Map />} />
     </Routes>
   );
 }
