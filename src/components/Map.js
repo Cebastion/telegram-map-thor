@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { getData } from '../API/api.service';
 import './Modal.css'; // Импортируйте файл стилей для модального окна
 
-const GetUserLocation = (setUserLocation) => {
+const getUserLocation = (setUserLocation) => {
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(
       (position) => {
@@ -38,7 +38,7 @@ const initMap = (mapInitialized, mapRef, userLocation) => {
   const ymaps = window.ymaps;
 
   ymaps.ready(() => {
-    if (mapInitialized.current) return;
+    if (mapInitialized.current || !userLocation) return;
 
     const map = new ymaps.Map(mapRef.current, {
       center: [userLocation.latitude, userLocation.longitude],
@@ -67,8 +67,26 @@ const initMap = (mapInitialized, mapRef, userLocation) => {
   });
 };
 
+const playAudioWithRetry = (audioRef, url, retries = 5) => {
+  audioRef.current.src = url;
+  const playAttempt = () => {
+    audioRef.current.play().catch(error => {
+      console.error('Audio playback failed:', error);
+      if (retries > 0) {
+        setTimeout(() => playAudioWithRetry(audioRef, url, retries - 1), 5000)
+      }
+    });
+  };
+  playAttempt();
+};
+
 const addRoute = (mapRef, userLocation, audioRef, visitedPoints, points) => {
   const ymaps = window.ymaps;
+
+  if (!mapRef.current || !mapRef.current.mapInstance) {
+    console.error("Map instance is not initialized.");
+    return;
+  }
 
   const map = mapRef.current.mapInstance;
 
@@ -85,8 +103,10 @@ const addRoute = (mapRef, userLocation, audioRef, visitedPoints, points) => {
   map.geoObjects.add(multiRoute);
 
   const updatePlacemark = (newLocation) => {
-    mapRef.current.placemark.geometry.setCoordinates([newLocation.latitude, newLocation.longitude]);
-    map.setCenter([newLocation.latitude, newLocation.longitude]);
+    if (mapRef.current.placemark) {
+      mapRef.current.placemark.geometry.setCoordinates([newLocation.latitude, newLocation.longitude]);
+      map.setCenter([newLocation.latitude, newLocation.longitude]);
+    }
 
     points.forEach((point, index) => {
       const distance = getDistanceFromLatLonInMeters(
@@ -96,11 +116,10 @@ const addRoute = (mapRef, userLocation, audioRef, visitedPoints, points) => {
         point.longitude
       );
 
-      if (distance <= 200 && !visitedPoints.current[index]) {
+      if (distance <= 200 && !visitedPoints.current[index]) { // Adjust the distance as needed
         visitedPoints.current[index] = true;
-        audioRef.current.src = point.url;
-        audioRef.current.play().catch(error => console.error('Audio playback failed:', error));
-        // alert(`Вы посетили точку ${index + 1}`);
+        // alert(`Вы прошли точку ${index + 1}`);
+        playAudioWithRetry(audioRef, point.url);
       }
     });
   };
@@ -136,9 +155,12 @@ const Map = () => {
       setPoints(data);
       visitedPoints.current = Array(data.length).fill(false); // Инициализация массива посещенных точек
     });
-
-    GetUserLocation(setUserLocation);
   }, []);
+
+  const handleStartRoute = () => {
+    setShowModal(false);
+    getUserLocation(setUserLocation);
+  };
 
   useEffect(() => {
     if (userLocation && !mapInitialized.current) {
@@ -147,10 +169,30 @@ const Map = () => {
   }, [userLocation]);
 
   useEffect(() => {
-    if (userLocation && points.length > 0 && !showModal) {
+    if (showModal) return;
+
+    if (mapInitialized.current && userLocation && points.length > 0) {
+      // Run the points.forEach logic only once here
+      points.forEach((point, index) => {
+        const distance = getDistanceFromLatLonInMeters(
+          userLocation.latitude,
+          userLocation.longitude,
+          point.latitude,
+          point.longitude
+        );
+
+        console.log(distance);
+
+        if (distance <= 2662607.17028858 && !visitedPoints.current[index]) { // Adjust the distance as needed
+          visitedPoints.current[index] = true;
+          alert(`Вы прошли точку ${index + 1}`);
+          playAudioWithRetry(audioRef, point.url);
+        }
+      });
+
       addRoute(mapRef, userLocation, audioRef, visitedPoints, points);
     }
-  }, [userLocation, points, showModal]);
+  }, [showModal, userLocation, points, mapInitialized.current]);
 
   return (
     <>
@@ -161,7 +203,7 @@ const Map = () => {
         <div className="modal-overlay">
           <div className="modal">
             <h2>Тур: {NameThor ? NameThor : '1'}</h2>
-            <button onClick={() => setShowModal(false)}>Начать маршрут</button>
+            <button onClick={handleStartRoute}>Начать маршрут</button>
           </div>
         </div>
       )}
