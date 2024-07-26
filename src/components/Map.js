@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import { getData } from '../API/api.service';
 import './Modal.css'; // Импортируйте файл стилей для модального окна
 
+const Distance = 2662607.17028858 // ТУТ МЕНЯЕМ РАССТОЯНИЕ
+
 const getUserLocation = (setUserLocation) => {
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(
@@ -73,7 +75,7 @@ const playAudioWithRetry = (audioRef, url, retries = 5) => {
     audioRef.current.play().catch(error => {
       console.error('Audio playback failed:', error);
       if (retries > 0) {
-        setTimeout(() => playAudioWithRetry(audioRef, url, retries - 1), 3000);
+        setTimeout(() => playAudioWithRetry(audioRef, url, retries - 1), 4000);
       }
     });
   };
@@ -116,7 +118,7 @@ const addRoute = (mapRef, userLocation, audioRef, visitedPoints, points) => {
         point.longitude
       );
 
-      if (distance <= 20 && !visitedPoints.current[index]) { // Adjust the distance as needed
+      if (distance <= Distance && !visitedPoints.current[index]) { // Adjust the distance as needed
         visitedPoints.current[index] = true;
         playAudioWithRetry(audioRef, point.url);
       }
@@ -180,7 +182,9 @@ const Map = () => {
           point.longitude
         );
 
-        if (distance <= 20 && !visitedPoints.current[index]) { // Adjust the distance as needed
+        console.log(distance)
+
+        if (distance <= Distance && !visitedPoints.current[index]) { // Adjust the distance as needed
           visitedPoints.current[index] = true;
           alert(`Точка ${index + 1} посещена!`);
           playAudioWithRetry(audioRef, point.url);
