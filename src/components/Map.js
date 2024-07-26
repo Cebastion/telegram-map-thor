@@ -145,6 +145,7 @@ const Map = () => {
   const [userLocation, setUserLocation] = useState(null);
   const [points, setPoints] = useState([]);
   const [showModal, setShowModal] = useState(true); // State for modal visibility
+  const [routeAdded, setRouteAdded] = useState(false); // State for tracking if the route is added
   const mapRef = useRef(null);
   const mapInitialized = useRef(false);
   const audioRef = useRef(null);
@@ -152,7 +153,7 @@ const Map = () => {
   const { NameThor } = useParams();
 
   useEffect(() => {
-    getData().then((data) => {
+    getData(NameThor).then((data) => {
       setPoints(data);
       visitedPoints.current = Array(data.length).fill(false); // Инициализация массива посещенных точек
     });
@@ -177,7 +178,7 @@ const Map = () => {
   useEffect(() => {
     if (showModal) return;
 
-    if (mapInitialized.current && userLocation && points.length > 0) {
+    if (mapInitialized.current && userLocation && points.length > 0 && !routeAdded) {
       // Run the points.forEach logic only once here
       points.forEach((point, index) => {
         const distance = getDistanceFromLatLonInMeters(
@@ -197,8 +198,9 @@ const Map = () => {
       });
 
       addRoute(mapRef, userLocation, audioRef, visitedPoints, points);
+      setRouteAdded(true); // Set routeAdded to true after the route is added
     }
-  }, [showModal, userLocation, points, mapInitialized.current]);
+  }, [showModal, userLocation, points, mapInitialized.current, routeAdded]);
 
   return (
     <>
