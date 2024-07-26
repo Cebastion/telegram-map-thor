@@ -3,7 +3,8 @@ import { useParams } from 'react-router-dom';
 import { getData } from '../API/api.service';
 import './Modal.css'; // Импортируйте файл стилей для модального окна
 
-const Distance = 20 // ТУТ МЕНЯЕМ РАССТОЯНИЕ
+const Distance = 503837.4250935229 // ТУТ МЕНЯЕМ РАССТОЯНИЕ
+const timeout = 4000;
 
 const getUserLocation = (setUserLocation) => {
   if (navigator.geolocation) {
@@ -71,11 +72,11 @@ const initMap = (mapInitialized, mapRef, userLocation) => {
 
 const playAudioWithRetry = (audioRef, url, retries = 5) => {
   const playAttempt = () => {
-    audioRef.current.src = url;
+    audioRef.current.src = '/music/ElevenLabs_2024_07_25T20_38_48_Artem_Kesso_pvc_s74_sb53_se27_b_m2.mp3';
     audioRef.current.play().catch(error => {
       console.error('Audio playback failed:', error);
       if (retries > 0) {
-        setTimeout(() => playAudioWithRetry(audioRef, url, retries - 1), 4000);
+        setTimeout(() => playAudioWithRetry(audioRef, url, retries - 1), timeout);
       }
     });
   };
