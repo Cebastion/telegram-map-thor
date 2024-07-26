@@ -73,7 +73,7 @@ const playAudioWithRetry = (audioRef, url, retries = 5) => {
     audioRef.current.play().catch(error => {
       console.error('Audio playback failed:', error);
       if (retries > 0) {
-        setTimeout(() => playAudioWithRetry(audioRef, url, retries - 1), 5000)
+        setTimeout(() => playAudioWithRetry(audioRef, url, retries - 1), 3000);
       }
     });
   };
@@ -116,9 +116,8 @@ const addRoute = (mapRef, userLocation, audioRef, visitedPoints, points) => {
         point.longitude
       );
 
-      if (distance <= 200 && !visitedPoints.current[index]) { // Adjust the distance as needed
+      if (distance <= 50 && !visitedPoints.current[index]) { // Adjust the distance as needed
         visitedPoints.current[index] = true;
-        // alert(`Вы прошли точку ${index + 1}`);
         playAudioWithRetry(audioRef, point.url);
       }
     });
@@ -155,7 +154,7 @@ const Map = () => {
       setPoints(data);
       visitedPoints.current = Array(data.length).fill(false); // Инициализация массива посещенных точек
     });
-  }, []);
+  }, [showModal]);
 
   const handleStartRoute = () => {
     setShowModal(false);
@@ -185,7 +184,7 @@ const Map = () => {
 
         if (distance <= 2662607.17028858 && !visitedPoints.current[index]) { // Adjust the distance as needed
           visitedPoints.current[index] = true;
-          alert(`Вы прошли точку ${index + 1}`);
+          alert(`Точка ${index + 1} посещена!`);
           playAudioWithRetry(audioRef, point.url);
         }
       });
