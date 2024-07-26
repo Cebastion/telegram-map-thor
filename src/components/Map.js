@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { getData } from '../API/api.service';
 import './Modal.css'; // Импортируйте файл стилей для модального окна
 
-const Distance = 2662607.17028858 // ТУТ МЕНЯЕМ РАССТОЯНИЕ
+const Distance = 20 // ТУТ МЕНЯЕМ РАССТОЯНИЕ
 
 const getUserLocation = (setUserLocation) => {
   if (navigator.geolocation) {
