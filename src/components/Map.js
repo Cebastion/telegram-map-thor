@@ -70,8 +70,8 @@ const initMap = (mapInitialized, mapRef, userLocation) => {
 };
 
 const playAudioWithRetry = (audioRef, url, retries = 5) => {
-  audioRef.current.src = url;
   const playAttempt = () => {
+    audioRef.current.src = url;
     audioRef.current.play().catch(error => {
       console.error('Audio playback failed:', error);
       if (retries > 0) {
@@ -161,6 +161,11 @@ const Map = () => {
   const handleStartRoute = () => {
     setShowModal(false);
     getUserLocation(setUserLocation);
+
+    // Initiate an empty audio play to allow later playback
+    audioRef.current.play().catch(error => {
+      console.error('Initial audio play failed:', error);
+    });
   };
 
   useEffect(() => {
