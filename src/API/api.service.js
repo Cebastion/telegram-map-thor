@@ -17,7 +17,7 @@ export async function getData() {
 
   // https://sheets.googleapis.com/v4/spreadsheets/ID Гугл таблицы/values/Название таблицы!B2:I2?key=Ключ от гугла
 
-  const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/1-f7nNfVlFYfQvfOfeITs4DK4huMSXMQqi1LNaXlctHo/values/Лист1!A3:Z3?key=AIzaSyBKkvIa5Pleeun5KOyTfDon4TRLUsKA6_s`);
+  const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/1-f7nNfVlFYfQvfOfeITs4DK4huMSXMQqi1LNaXlctHo/values/Лист1!B3:Z3?key=AIzaSyBKkvIa5Pleeun5KOyTfDon4TRLUsKA6_s`);
   
   const data = await response.json();
 
