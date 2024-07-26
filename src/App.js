@@ -1,9 +1,12 @@
+import { Route, Routes } from 'react-router-dom'
 import './App.css';
 import Map from './components/Map'
 
 function App() {
   return (
-    <Map/>
+    <Routes>
+      <Route path="/:NameThor?" element={<Map />} />
+    </Routes>
   );
 }
 

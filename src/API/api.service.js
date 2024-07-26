@@ -18,7 +18,7 @@ export async function getData() {
   
   const data = await response.json();
 
-  //console.dir(data)
+  // console.log(data)
   
   if (data.values && Array.isArray(data.values)) {
     const extractedData = data.values.flat().map(item => extractData(String(item)));

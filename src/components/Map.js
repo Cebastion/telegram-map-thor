@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { getData } from '../API/api.service';
 import './Modal.css'; // Импортируйте файл стилей для модального окна
 
@@ -128,6 +129,7 @@ const Map = () => {
   const mapInitialized = useRef(false);
   const audioRef = useRef(null);
   const visitedPoints = useRef([]); // Отслеживание посещенных точек
+  const { NameThor } = useParams();
 
   useEffect(() => {
     getData().then((data) => {
@@ -158,7 +160,7 @@ const Map = () => {
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
-            <h2>Навигация</h2>
+            <h2>Тур: {NameThor ? NameThor : '1'}</h2>
             <button onClick={() => setShowModal(false)}>Начать маршрут</button>
           </div>
         </div>
