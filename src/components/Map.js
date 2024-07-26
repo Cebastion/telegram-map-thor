@@ -4,7 +4,7 @@ import { getData } from '../API/api.service';
 import './Modal.css'; // Импортируйте файл стилей для модального окна
 
 const Distance = 20 // ТУТ МЕНЯЕМ РАССТОЯНИЕ
-const timeout = 4000;
+const timeout = 4000 // ТУТ ТАЙМЕР ЧЕРЕЗ СКОЛЬКО ПОВТОРИТЬ ПОПЫТКУ ВОСПРОИЗВЕСТИ ЗВУК
 
 const getUserLocation = (setUserLocation) => {
   if (navigator.geolocation) {
@@ -72,7 +72,7 @@ const initMap = (mapInitialized, mapRef, userLocation) => {
 
 const playAudioWithRetry = (audioRef, url, retries = 5) => {
   const playAttempt = () => {
-    audioRef.current.src = '/music/ElevenLabs_2024_07_25T20_38_48_Artem_Kesso_pvc_s74_sb53_se27_b_m2.mp3';
+    audioRef.current.src = url;
     audioRef.current.play().catch(error => {
       console.error('Audio playback failed:', error);
       if (retries > 0) {
@@ -193,7 +193,7 @@ const Map = () => {
 
         if (distance <= Distance && !visitedPoints.current[index]) { // Adjust the distance as needed
           visitedPoints.current[index] = true;
-          alert(`Точка ${index + 1} посещена!`);
+          //alert(`Точка ${index + 1} посещена!`);
           playAudioWithRetry(audioRef, point.url);
         }
       });
