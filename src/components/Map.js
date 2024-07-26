@@ -101,7 +101,7 @@ const addRoute = (mapRef, userLocation, audioRef, visitedPoints, points) => {
         visitedPoints.current[index] = true;
         audioRef.current.src = point.url;
         audioRef.current.play().catch(error => console.error('Audio playback failed:', error));
-        alert(`Вы посетили точку ${index + 1}`);
+        // alert(`Вы посетили точку ${index + 1}`);
       }
     });
   };
@@ -147,7 +147,7 @@ const Map = () => {
   }, [userLocation]);
 
   useEffect(() => {
-    if (userLocation && points.length > 0 && showModal) {
+    if (userLocation && points.length > 0 && !showModal) {
       addRoute(mapRef, userLocation, audioRef, visitedPoints, points);
     }
   }, [userLocation, points, showModal]);
