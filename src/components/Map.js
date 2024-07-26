@@ -165,7 +165,7 @@ const Map = () => {
     // Initiate an empty audio play to allow later playback
     audioRef.current.play().catch(error => {
       console.error('Initial audio play failed:', error);
-    });
+    }); 
   };
 
   useEffect(() => {
