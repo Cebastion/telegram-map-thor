@@ -116,7 +116,7 @@ const addRoute = (mapRef, userLocation, audioRef, visitedPoints, points) => {
         point.longitude
       );
 
-      if (distance <= 200 && !visitedPoints.current[index]) { // Adjust the distance as needed
+      if (distance <= 20 && !visitedPoints.current[index]) { // Adjust the distance as needed
         visitedPoints.current[index] = true;
         playAudioWithRetry(audioRef, point.url);
       }
@@ -179,8 +179,8 @@ const Map = () => {
           point.latitude,
           point.longitude
         );
-        
-        if (distance <= 200 && !visitedPoints.current[index]) { // Adjust the distance as needed
+
+        if (distance <= 20 && !visitedPoints.current[index]) { // Adjust the distance as needed
           visitedPoints.current[index] = true;
           alert(`Точка ${index + 1} посещена!`);
           playAudioWithRetry(audioRef, point.url);
