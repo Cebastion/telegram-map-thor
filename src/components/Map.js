@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { getData } from '../API/api.service';
 import './Modal.css'; // Импортируйте файл стилей для модального окна
 
-const Distance = 503837.4250935229 // ТУТ МЕНЯЕМ РАССТОЯНИЕ
+const Distance = 20 // ТУТ МЕНЯЕМ РАССТОЯНИЕ
 const timeout = 4000;
 
 const getUserLocation = (setUserLocation) => {
