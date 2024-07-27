@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getData } from '../API/api.service';
-import './Modal.css'; // Импортируйте файл стилей для модального окна
 
 const Distance = 20 // ТУТ МЕНЯЕМ РАССТОЯНИЕ
 const timeout = 4000 // ТУТ ТАЙМЕР ЧЕРЕЗ СКОЛЬКО ПОВТОРИТЬ ПОПЫТКУ ВОСПРОИЗВЕСТИ ЗВУК
