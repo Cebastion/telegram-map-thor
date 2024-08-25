@@ -5,7 +5,7 @@ import './Modal.css'
 import { GetUserLocationTest } from '../utils/GetUserLocationTest.until'
 import { InitMapTest } from '../utils/InitMapTest.until'
 import { PlayAudioWithRetry } from '../utils/PlayAudioWithRetry.util'
-import { AddRoute } from '../utils/AddRoute.util'
+import { AddRouteTest } from '../utils/AddRouteTest.util'
 import { GetDistanceFromLatLonInMeters } from '../utils/GetDistanceFromLatLonInMeters.util'
 
 const Distance = 20 // ТУТ МЕНЯЕМ РАССТОЯНИЕ
@@ -63,7 +63,7 @@ const Map = () => {
         }
       })
 
-      AddRoute(mapRef, Distance, audioRef, visitedPoints, points)
+      AddRouteTest(mapRef, Distance, audioRef, visitedPoints, points)
       setRouteAdded(true)
     }
   }, [showModal, userLocation, points, mapInitialized.current, routeAdded])
