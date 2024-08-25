@@ -23,41 +23,41 @@ const AddRoute = (mapRef, Distance, audioRef, visitedPoints, points) => {
 
   map.geoObjects.add(multiRoute)
 
-  const updatePlacemark = (newLocation) => {
-    if (mapRef.current.placemark) {
-      mapRef.current.placemark.geometry.setCoordinates([newLocation.latitude, newLocation.longitude])
-      map.setCenter([newLocation.latitude, newLocation.longitude])
-    }
+  // const updatePlacemark = (newLocation) => {
+  //   if (mapRef.current.placemark) {
+  //     mapRef.current.placemark.geometry.setCoordinates([newLocation.latitude, newLocation.longitude])
+  //     map.setCenter([newLocation.latitude, newLocation.longitude])
+  //   }
 
-    points.forEach((point, index) => {
-      const distance = GetDistanceFromLatLonInMeters(
-        newLocation.latitude,
-        newLocation.longitude,
-        point.latitude,
-        point.longitude
-      )
+  //   points.forEach((point, index) => {
+  //     const distance = GetDistanceFromLatLonInMeters(
+  //       newLocation.latitude,
+  //       newLocation.longitude,
+  //       point.latitude,
+  //       point.longitude
+  //     )
 
-      if (distance <= Distance && !visitedPoints.current[index]) { // Adjust the distance as needed
-        visitedPoints.current[index] = true
-        PlayAudioWithRetry(audioRef, point.url)
-      }
-    })
-  }
+  //     if (distance <= Distance && !visitedPoints.current[index]) { // Adjust the distance as needed
+  //       visitedPoints.current[index] = true
+  //       PlayAudioWithRetry(audioRef, point.url)
+  //     }
+  //   })
+  // }
 
-  navigator.geolocation.watchPosition(
-    (position) => {
-      const { latitude, longitude } = position.coords
-      updatePlacemark({ latitude, longitude })
-    },
-    (error) => {
-      console.error('Error watching user location:', error)
-    },
-    {
-      enableHighAccuracy: true,
-      timeout: 10000,
-      maximumAge: 0
-    }
-  )
+  // navigator.geolocation.watchPosition(
+  //   (position) => {
+  //     const { latitude, longitude } = position.coords
+  //     updatePlacemark({ latitude, longitude })
+  //   },
+  //   (error) => {
+  //     console.error('Error watching user location:', error)
+  //   },
+  //   {
+  //     enableHighAccuracy: true,
+  //     timeout: 10000,
+  //     maximumAge: 0
+  //   }
+  // )
 }
 
 
