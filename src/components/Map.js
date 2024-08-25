@@ -76,7 +76,7 @@ const Map = () => {
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
-            <h2>Тур: {NameThor ? NameThor : '1'}</h2>
+            <h2>Тур: {NameThor ? NameThor : 'error'}</h2>
             <button onClick={handleStartRoute}>Начать маршрут</button>
           </div>
         </div>

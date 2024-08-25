@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getData } from '../API/api.service'
 import './Modal.css'
-import { GetUserLocationTest } from '../utils/GetUserLocationTest.util'
-import { InitMapTest } from '../utils/InitMapTest.util'
+import { GetUserLocation } from '../utils/GetUserLocation.util'
+import { InitMapTest } from '../utils/InitMapTest.until'
 import { PlayAudioWithRetry } from '../utils/PlayAudioWithRetry.util'
 import { AddRoute } from '../utils/AddRoute.util'
 import { GetDistanceFromLatLonInMeters } from '../utils/GetDistanceFromLatLonInMeters.util'
@@ -31,7 +31,7 @@ const Map = () => {
 
   const handleStartRoute = () => {
     setShowModal(false)
-    GetUserLocationTest(setUserLocation)
+    GetUserLocation(setUserLocation)
 
     audioRef.current.play().catch(error => {
       console.error('Initial audio play failed:', error)
@@ -44,6 +44,30 @@ const Map = () => {
     }
   }, [])
 
+  useEffect(() => {
+    if (showModal) return
+
+    if (mapInitialized.current && userLocation && points.length > 0 && !routeAdded) {
+      points.forEach((point, index) => {
+        const distance = GetDistanceFromLatLonInMeters(
+          userLocation.latitude,
+          userLocation.longitude,
+          point.latitude,
+          point.longitude
+        )
+
+        if (distance <= Distance && !visitedPoints.current[index]) {
+          visitedPoints.current[index] = true
+          //alert(`Точка ${index + 1} посещена!`);
+          PlayAudioWithRetry(audioRef, point.url, timeout)
+        }
+      })
+
+      AddRoute(mapRef, Distance, audioRef, visitedPoints, points)
+      setRouteAdded(true)
+    }
+  }, [showModal, points, mapInitialized.current, routeAdded])
+
   return (
     <>
       <div ref={mapRef} style={{ width: '100%', height: '100vh' }} />
@@ -52,7 +76,7 @@ const Map = () => {
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
-            <h2>Тур: {NameThor ? NameThor : '1'}</h2>
+            <h2>Test Тур: {NameThor ? NameThor : 'error'}</h2>
             <button onClick={handleStartRoute}>Начать маршрут</button>
           </div>
         </div>

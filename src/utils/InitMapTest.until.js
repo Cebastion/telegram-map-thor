@@ -1,4 +1,4 @@
-const InitMap = (mapInitialized, mapRef, userLocation) => {
+const InitMapTest = (mapInitialized, mapRef, userLocation) => {
   const ymaps = window.ymaps
 
   ymaps.ready(() => {
@@ -31,4 +31,4 @@ const InitMap = (mapInitialized, mapRef, userLocation) => {
   })
 }
 
-export { InitMap }
+export { InitMapTest }

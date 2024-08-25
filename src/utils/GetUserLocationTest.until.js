@@ -1,4 +1,4 @@
-const GetUserLocation = (setUserLocation) => {
+const GetUserLocationTest = (setUserLocation) => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -19,4 +19,4 @@ const GetUserLocation = (setUserLocation) => {
   }
 }
 
-export { GetUserLocation }
+export { GetUserLocationTest }
