@@ -24,7 +24,7 @@ const InitMap = (mapInitialized, mapRef, userLocation) => {
 
     map.geoObjects.add(placemark)
 
-    map.setCenter([userLocation.latitude, userLocation.longitude])
+    //map.setCenter([userLocation.latitude, userLocation.longitude])
 
     mapRef.current.mapInstance = map
     mapRef.current.placemark = placemark
