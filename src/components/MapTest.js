@@ -66,7 +66,7 @@ const Map = () => {
       AddRoute(mapRef, Distance, audioRef, visitedPoints, points)
       setRouteAdded(true)
     }
-  }, [showModal, userLocation, points, mapInitialized.current, routeAdded])
+  }, [showModal, points, mapInitialized.current, routeAdded])
 
   return (
     <>
