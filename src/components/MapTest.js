@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getData } from '../API/api.service'
 import './Modal.css'
-import { GetUserLocation } from '../utils/GetUserLocation.util'
+import { GetUserLocationTest } from '../utils/GetUserLocationTest.util'
 import { InitMapTest } from '../utils/InitMapTest.util'
 import { PlayAudioWithRetry } from '../utils/PlayAudioWithRetry.util'
 import { AddRoute } from '../utils/AddRoute.util'
@@ -31,7 +31,7 @@ const Map = () => {
 
   const handleStartRoute = () => {
     setShowModal(false)
-    GetUserLocation(setUserLocation)
+    GetUserLocationTest(setUserLocation)
 
     audioRef.current.play().catch(error => {
       console.error('Initial audio play failed:', error)
