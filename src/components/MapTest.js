@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getData } from '../API/api.service'
 import './Modal.css'
-import { GetUserLocation } from '../utils/GetUserLocation.util'
+import { GetUserLocationTest } from '../utils/GetUserLocationTest.until'
 import { InitMapTest } from '../utils/InitMapTest.until'
 import { PlayAudioWithRetry } from '../utils/PlayAudioWithRetry.util'
 import { AddRoute } from '../utils/AddRoute.util'
@@ -31,7 +31,7 @@ const Map = () => {
 
   const handleStartRoute = () => {
     setShowModal(false)
-    GetUserLocation(setUserLocation)
+    GetUserLocationTest(setUserLocation)
 
     audioRef.current.play().catch(error => {
       console.error('Initial audio play failed:', error)
@@ -42,7 +42,7 @@ const Map = () => {
     if (userLocation && !mapInitialized.current) {
       InitMapTest(mapInitialized, mapRef, userLocation)
     }
-  }, [])
+  }, [userLocation])
 
   useEffect(() => {
     if (showModal) return
@@ -66,7 +66,7 @@ const Map = () => {
       AddRoute(mapRef, Distance, audioRef, visitedPoints, points)
       setRouteAdded(true)
     }
-  }, [showModal, points, mapInitialized.current, routeAdded])
+  }, [showModal, userLocation, points, mapInitialized.current, routeAdded])
 
   return (
     <>
@@ -76,7 +76,7 @@ const Map = () => {
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
-            <h2>Test Тур: {NameThor ? NameThor : 'error'}</h2>
+            <h2>Тур: {NameThor ? NameThor : '1'}</h2>
             <button onClick={handleStartRoute}>Начать маршрут</button>
           </div>
         </div>
