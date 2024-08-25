@@ -44,30 +44,6 @@ const Map = () => {
     }
   }, [])
 
-  useEffect(() => {
-    if (showModal) return
-
-    if (mapInitialized.current && userLocation && points.length > 0 && !routeAdded) {
-      points.forEach((point, index) => {
-        const distance = GetDistanceFromLatLonInMeters(
-          userLocation.latitude,
-          userLocation.longitude,
-          point.latitude,
-          point.longitude
-        )
-
-        if (distance <= Distance && !visitedPoints.current[index]) {
-          visitedPoints.current[index] = true
-          //alert(`Точка ${index + 1} посещена!`);
-          PlayAudioWithRetry(audioRef, point.url, timeout)
-        }
-      })
-
-      AddRoute(mapRef, Distance, audioRef, visitedPoints, points)
-      setRouteAdded(true)
-    }
-  }, [showModal, points, mapInitialized.current, routeAdded])
-
   return (
     <>
       <div ref={mapRef} style={{ width: '100%', height: '100vh' }} />
