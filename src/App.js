@@ -6,6 +6,7 @@ function App() {
   return (
     <Routes>
       <Route path="/tour/:NameThor?" element={<Map />} />
+      <Route path="/tour/test/:NameThor?" element={<Map />} />
     </Routes>
   );
 }
